@@ -161,22 +161,27 @@ export function Footer({
         {/* Bottom Bar: Copyright & Back to Top */}
         <div className="mt-12 pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div className="flex items-center gap-3">
-            <p>© 2026 Azeem Trader. All Rights Reserved.</p>
-            <span aria-hidden="true">·</span>
-            {isOwnerMode ? (
-              <button
-                onClick={onOpenPriceManager}
-                className="text-blue-400 hover:text-blue-300 font-semibold cursor-pointer underline underline-offset-2"
-              >
-                Owner Price Control (Azeem Ali)
-              </button>
-            ) : (
-              <button
-                onClick={onOpenOwnerAuth}
-                className="text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
-              >
-                Owner Price Access
-              </button>
+            <p
+              onClick={(e) => {
+                // Secret admin trigger: 3 rapid clicks on the copyright
+                if (e.detail === 3) {
+                  onOpenOwnerAuth?.();
+                }
+              }}
+              className="cursor-default select-none"
+            >
+              © 2026 Azeem Trader. All Rights Reserved.
+            </p>
+            {isOwnerMode && (
+              <>
+                <span aria-hidden="true">·</span>
+                <button
+                  onClick={onOpenPriceManager}
+                  className="text-blue-400 hover:text-blue-300 font-semibold cursor-pointer underline underline-offset-2"
+                >
+                  Admin Price Control (Azeem Ali)
+                </button>
+              </>
             )}
           </div>
 

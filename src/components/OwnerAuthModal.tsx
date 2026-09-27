@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Lock, KeyRound, CheckCircle2, AlertCircle } from 'lucide-react';
+import { X, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { checkOwnerPin } from '../services/productStorage';
-import { STORE_INFO } from '../data/products';
 
 interface OwnerAuthModalProps {
   isOpen: boolean;
@@ -12,12 +11,14 @@ interface OwnerAuthModalProps {
 export function OwnerAuthModal({ isOpen, onClose, onSuccess }: OwnerAuthModalProps) {
   const [pin, setPin] = useState('');
   const [error, setError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       setPin('');
       setError(false);
+      setShowPassword(false);
       setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [isOpen]);
@@ -39,8 +40,8 @@ export function OwnerAuthModal({ isOpen, onClose, onSuccess }: OwnerAuthModalPro
     <div
       role="dialog"
       aria-modal="true"
-      aria-labelledby="auth-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-in fade-in duration-200"
+      aria-labelledby="admin-auth-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
       onClick={onClose}
     >
       <div
@@ -56,51 +57,53 @@ export function OwnerAuthModal({ isOpen, onClose, onSuccess }: OwnerAuthModalPro
         </button>
 
         <div className="w-12 h-12 rounded-2xl bg-blue-600/10 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-4">
-          <KeyRound className="w-6 h-6" />
+          <Lock className="w-6 h-6" />
         </div>
 
-        <h3 id="auth-modal-title" className="font-display text-xl font-bold text-white">
-          Owner Price Access
+        <h3 id="admin-auth-title" className="font-display text-xl font-bold text-white">
+          Admin Verification
         </h3>
         <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-          Welcome <strong className="text-slate-200">{STORE_INFO.owner}</strong>. Enter your owner PIN to adjust store prices, change discounts, or add new items.
+          Restricted administrative area. Please enter your private owner passcode to manage store prices.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-5 space-y-4">
           <div>
-            <label htmlFor="owner-pin-input" className="block text-xs font-medium text-slate-300 mb-1.5">
-              Enter Owner PIN
+            <label htmlFor="admin-passcode-input" className="block text-xs font-medium text-slate-300 mb-1.5">
+              Admin Passcode
             </label>
             <div className="relative">
               <input
-                id="owner-pin-input"
+                id="admin-passcode-input"
                 ref={inputRef}
-                type="password"
-                maxLength={8}
+                type={showPassword ? 'text' : 'password'}
+                maxLength={16}
                 value={pin}
                 onChange={(e) => {
                   setPin(e.target.value);
                   setError(false);
                 }}
-                placeholder="Enter PIN (e.g. 1142)"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-center font-mono text-lg tracking-widest text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"
+                placeholder="Enter passcode"
+                className="w-full px-4 py-2.5 pr-11 rounded-xl bg-slate-950 border border-slate-800 text-center font-mono text-lg tracking-widest text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
 
             {error && (
-              <p className="mt-2 text-xs text-red-400 flex items-center gap-1.5">
+              <p className="mt-2 text-xs text-red-400 flex items-center gap-1.5 animate-shake">
                 <AlertCircle className="w-3.5 h-3.5" />
-                <span>Incorrect PIN. (Hint: Try 1142 or 0319)</span>
+                <span>Access Denied: Invalid Passcode</span>
               </p>
             )}
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 text-[11px] text-slate-400 space-y-1">
-            <span className="font-medium text-slate-300 block">Quick Reference for Azeem Ali:</span>
-            <p>Default PIN is <strong className="text-blue-400 font-mono">1142</strong> (Last 4 digits of phone 03195411421) or <strong className="text-blue-400 font-mono">0319</strong>.</p>
-          </div>
-
-          <div className="flex gap-2 pt-1">
+          <div className="flex gap-2 pt-2">
             <button
               type="button"
               onClick={onClose}
@@ -112,7 +115,7 @@ export function OwnerAuthModal({ isOpen, onClose, onSuccess }: OwnerAuthModalPro
               type="submit"
               className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-xs font-semibold shadow-md shadow-blue-600/30 transition-all cursor-pointer"
             >
-              Unlock Editor
+              Authorize
             </button>
           </div>
         </form>

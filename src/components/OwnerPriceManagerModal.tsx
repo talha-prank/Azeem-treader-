@@ -734,26 +734,26 @@ export function OwnerPriceManagerModal({
             <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3">
               <h3 className="font-display text-sm font-bold text-white flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-blue-400" />
-                <span>Change Owner Passcode PIN</span>
+                <span>Change Admin Passcode</span>
               </h3>
               <p className="text-xs text-slate-400">
-                Current PIN is <strong className="text-blue-400 font-mono">{getStoredOwnerPin()}</strong>. You can change it to any 4-digit code.
+                You can change your private admin passcode anytime.
               </p>
 
               <form onSubmit={handleSavePin} className="flex gap-2 pt-2">
                 <input
                   type="password"
-                  maxLength={6}
+                  maxLength={12}
                   value={newPinInput}
                   onChange={(e) => setNewPinInput(e.target.value)}
-                  placeholder="Enter new 4-digit PIN"
+                  placeholder="Enter new private passcode"
                   className="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white font-mono tracking-widest placeholder-slate-600 focus:outline-none focus:border-blue-500"
                 />
                 <button
                   type="submit"
                   className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold cursor-pointer"
                 >
-                  Update PIN
+                  Update Passcode
                 </button>
               </form>
               {pinChangeMsg && (

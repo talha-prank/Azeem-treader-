@@ -49,12 +49,22 @@ export function Navbar({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
         {/* Zone 1: Single element wordmark brand */}
-        <a href="#" className="flex items-center gap-2 group">
-          <span className="font-display text-xl sm:text-2xl font-bold tracking-tight text-white group-hover:text-blue-400 transition-colors">
-            Azeem Trader
-          </span>
-          <span className="h-2 w-2 rounded-full bg-blue-500 ring-4 ring-blue-500/20 animate-pulse"></span>
-        </a>
+        <div
+          onClick={(e) => {
+            // Secret admin trigger: 3 rapid clicks on the logo
+            if (e.detail === 3) {
+              onOpenOwnerAuth();
+            }
+          }}
+          className="cursor-pointer select-none"
+        >
+          <a href="#" className="flex items-center gap-2 group">
+            <span className="font-display text-xl sm:text-2xl font-bold tracking-tight text-white group-hover:text-blue-400 transition-colors">
+              Azeem Trader
+            </span>
+            <span className="h-2 w-2 rounded-full bg-blue-500 ring-4 ring-blue-500/20 animate-pulse"></span>
+          </a>
+        </div>
 
         {/* Zone 2: 4-6 text links with subtle hover underlines */}
         <nav className="hidden lg:flex items-center gap-8 text-sm font-medium text-slate-300">
@@ -71,24 +81,15 @@ export function Navbar({
 
         {/* Zone 3: 1-2 primary actions */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Owner Portal / Price Manager trigger */}
-          {isOwnerMode ? (
+          {/* Admin Price Manager button ONLY when admin is logged in */}
+          {isOwnerMode && (
             <button
               onClick={onOpenPriceManager}
-              title="Open Owner Price Control Center"
+              title="Admin Price Control Center"
               className="px-2.5 py-1.5 rounded-xl bg-blue-950/80 border border-blue-500/50 hover:bg-blue-900/80 text-blue-300 hover:text-white transition-all flex items-center gap-1.5 text-xs font-semibold cursor-pointer"
             >
               <Sliders className="w-3.5 h-3.5 text-blue-400" />
               <span className="hidden sm:inline">Price Manager</span>
-            </button>
-          ) : (
-            <button
-              onClick={onOpenOwnerAuth}
-              title="Owner Price Login (Azeem Ali)"
-              className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 hover:bg-slate-850 text-slate-400 hover:text-blue-400 transition-all flex items-center gap-1.5 text-xs font-medium cursor-pointer"
-            >
-              <KeyRound className="w-4 h-4" />
-              <span className="hidden md:inline text-[11px]">Owner</span>
             </button>
           )}
 
@@ -146,18 +147,19 @@ export function Navbar({
           </div>
 
           <div className="pt-3 border-t border-slate-800/80 flex flex-col gap-2.5">
-            {/* Owner button in mobile drawer */}
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                if (isOwnerMode) onOpenPriceManager();
-                else onOpenOwnerAuth();
-              }}
-              className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-900 text-blue-300 border border-slate-800 text-xs font-semibold cursor-pointer"
-            >
-              <KeyRound className="w-4 h-4 text-blue-400" />
-              <span>{isOwnerMode ? 'Open Price Manager (Azeem Ali)' : 'Owner Price Login'}</span>
-            </button>
+            {/* Owner button in mobile drawer ONLY when admin is logged in */}
+            {isOwnerMode && (
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenPriceManager();
+                }}
+                className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-blue-950/80 text-blue-300 border border-blue-500/40 text-xs font-semibold cursor-pointer"
+              >
+                <Sliders className="w-4 h-4 text-blue-400" />
+                <span>Price Manager (Admin)</span>
+              </button>
+            )}
 
             <a
               href={`tel:${STORE_INFO.phone}`}

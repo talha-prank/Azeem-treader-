@@ -48,6 +48,44 @@ export default function App() {
     }
   }, [products, selectedProduct]);
 
+  // Private admin triggers: URL hash (#admin), search query (?admin), or shortcut (Ctrl+Shift+A / Alt+A)
+  useEffect(() => {
+    const checkSecretRoute = () => {
+      const hash = window.location.hash.toLowerCase();
+      const search = window.location.search.toLowerCase();
+      if (
+        hash === '#admin' ||
+        hash === '#manage' ||
+        hash === '#owner' ||
+        search.includes('admin') ||
+        search.includes('owner') ||
+        search.includes('manage')
+      ) {
+        setIsOwnerAuthOpen(true);
+      }
+    };
+
+    checkSecretRoute();
+    window.addEventListener('hashchange', checkSecretRoute);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) ||
+        (e.altKey && (e.key === 'A' || e.key === 'a'))
+      ) {
+        e.preventDefault();
+        setIsOwnerAuthOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('hashchange', checkSecretRoute);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   // Keep cart item prices synchronized with updated store prices
   const syncCartWithProducts = useCallback((updatedProducts: Product[]) => {
     setCartItems((prevCart) =>
