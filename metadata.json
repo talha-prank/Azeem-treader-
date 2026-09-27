@@ -1,0 +1,6 @@
+{
+  "name": "Azeem Trader - Mobile Accessories Store",
+  "description": "Premium mobile accessories store in Peshawar, Pakistan. Earbuds, power banks, fast chargers, cables, speakers, and phone mounts by Azeem Ali.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
